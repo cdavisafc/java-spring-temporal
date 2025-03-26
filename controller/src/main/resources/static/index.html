@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting Form</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="div-container">
+        <h1>Who shall we greet</h1>
+        <form id="greetingForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <button class="button-invoke" type="button" id="invokeButton">Please Greet</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('invokeButton').addEventListener('click', function() {
+            const formData = {
+                name: document.getElementById('name').value,
+            };
+
+            fetch('http://localhost:8080/launchworkflow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'plain/text',
+                },
+                body: formData.name,
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Greeting request failed.');
+                }
+            })
+            .then(data => {
+                document.getElementById('result').textContent = data;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
